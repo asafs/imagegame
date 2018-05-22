@@ -12,8 +12,7 @@
     public class RectangleView : View
     {
         private Paint _paint;
-
-        private Rect _rect;
+        private readonly Rect _bounderies;
 
         #region Overridden Ctors
 
@@ -44,14 +43,11 @@
 
         #endregion
 
-        public RectangleView(Context context, float centerX, float centerY, double startWidth, double startHeight)
+        public RectangleView(Context context, Rect initialRect, Rect bounderies)
             : this(context)
         {
-            _rect = new Rect(
-                (int)(centerX - startWidth / 2),
-                (int)(centerY - startHeight / 2),
-                (int)(centerX + startWidth / 2),
-                (int)(centerY + startHeight / 2));
+            this.InternalRect = initialRect;
+            _bounderies = bounderies;
         }
 
         private void Init()
@@ -59,29 +55,65 @@
             _paint = new Paint(PaintFlags.AntiAlias)
             {
                 Color = Color.Red,
-                StrokeWidth = 5
+                StrokeWidth = 5,
             };
+
+            _paint.SetStyle(Paint.Style.Stroke);
         }
+
+        public bool InRect(float x, float y)
+        {
+            return this.InternalRect.Contains((int)x, (int)y);
+        }
+
+        public Rect InternalRect { get; private set; }
 
         protected override void OnDraw(Canvas canvas)
         {
-            canvas.DrawRect(_rect, _paint);
+            canvas.DrawRect(this.InternalRect, _paint);
         }
 
         public void MoveCenter(float newCenterX, float newCenterY)
         {
-            _rect.Inset((int)(newCenterX - _rect.ExactCenterX()),
-                (int)(newCenterY - _rect.ExactCenterY()));
-
-            this.Invalidate();
-            this.RequestLayout();
+            var rect = CreateRect(newCenterX, newCenterY, this.InternalRect.Width(), this.InternalRect.Height());
+            this.UpdateIfValid(rect);
         }
 
-        public void UpdateSize(int diffWidth, int diffHeight)
+        public void UpdateSize(float newWidth, float newHeight)
         {
-            _rect.Offset(diffWidth, diffHeight);
-            this.Invalidate();
-            this.RequestLayout();
+            var rect = CreateRect(this.InternalRect.ExactCenterX(), this.InternalRect.ExactCenterY(), newWidth, newHeight);
+
+            this.UpdateIfValid(rect);
+        }
+
+        private void UpdateIfValid(Rect rect)
+        {
+            if (this.ValidRect(rect))
+            {
+                this.InternalRect = rect;
+
+                this.Invalidate();
+                this.RequestLayout();
+            }
+        }
+
+        private bool ValidRect(Rect rect)
+        {
+            return rect.Top >= _bounderies.Top
+                   && rect.Left >= _bounderies.Left
+                   && rect.Right <= _bounderies.Right
+                   && rect.Bottom <= _bounderies.Bottom
+                   && rect.Bottom >= rect.Top
+                   && rect.Right >= rect.Left;
+        }
+
+        public static Rect CreateRect(float x, float y, double width, double height)
+        {
+            return new Rect(
+                (int)(x - width / 2),
+                (int)(y - height / 2),
+                (int)(x + width / 2),
+                (int)(y + height / 2));
         }
     }
 }
