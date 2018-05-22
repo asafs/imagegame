@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/MainLayout">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/ImageLayout">
+            <ImageView
+                android:src="@drawable/pic1s"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/ImageView"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:id="@+id/ManageSectionsLayout">
+            <TextView
+                android:id="@+id/ManageSectionHeadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sections"
+                android:textSize="16sp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+            <Button
+                android:id="@+id/ManageSectionDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save Image"
+                android:textSize="16sp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true" />
+            <Button
+                android:id="@+id/ManageSectionAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Section"
+                android:textSize="16sp"
+                android:layout_above="@id/ManageSectionDone"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/DebugLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Debug Message Here"
+        android:textSize="32sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
